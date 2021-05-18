@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ContentView {
     
-    var emojis = ["🐸","🦆", "🐶","🦁", "🦒", "🦊", "🐼","🐎","🧸","🐽","🦖","🐢","🐓","🐳","🦀","🦑","🦐","🐷"]
-    @State var emojiCount = 18
+    @State var emojis = [String]()
+    @State var emojiCount = 0
     
 }
 
@@ -18,6 +18,9 @@ extension ContentView: View {
     var body: some View {
         
         VStack {
+            Text("Memorize!")
+                .font(.title)
+                .fontWeight(.medium)
             ScrollView(showsIndicators: false) {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
                     ForEach(emojis[0..<emojiCount], id: \.self) { emoji in
@@ -27,10 +30,12 @@ extension ContentView: View {
                 .foregroundColor(.red)
             }
             Spacer()
-            HStack {
-                remove
+            HStack(alignment: .lastTextBaseline) {
+                animals
                 Spacer()
-                add
+                sport
+                Spacer()
+                weather
             }
             .font(.largeTitle)
             .padding(.horizontal)
@@ -40,24 +45,31 @@ extension ContentView: View {
 }
 
 extension ContentView {
-    var remove: some View {
-        Button {
-            if emojiCount > 1 {
-                emojiCount -= 1
-            }
-        } label: {
-            Image(systemName: "minus.circle")
-        }
+    var animals: some View {
+        ThemeButton(
+            emojis: $emojis,
+            emojiCount: $emojiCount,
+            content: ["🐸","🦆", "🐶","🦁", "🦒", "🦊", "🐼","🐎","🧸","🐽","🦖","🐢","🐓","🐳","🦀","🦑","🦐","🐷"],
+            themeName: "Animals",
+            sfSymbol: "tortoise")
     }
     
-    var add: some View {
-        Button {
-            if emojiCount < emojis.count{
-                emojiCount += 1
-            }
-        } label: {
-            Image(systemName: "plus.circle")
-        }
+    var weather: some View {
+        ThemeButton(
+            emojis: $emojis,
+            emojiCount: $emojiCount,
+            content: ["☁️","☀️","🌤","🌥","⛅️","🌦","🌧","🌨","⛈","🌩","⚡️"],
+            themeName: "Weather",
+            sfSymbol: "cloud.sun")
+    }
+    
+    var sport: some View {
+        ThemeButton(
+            emojis: $emojis,
+            emojiCount: $emojiCount,
+            content: ["🏋️‍♀️","⛹🏼‍♀️","🤺","🏌️‍♂️","🏄‍♂️","🚴‍♀️","⛷","🏂","🤼","🤸🏼‍♀️","🏇🏼","🤽🏻‍♀️", "🚣🏻"],
+            themeName: "Sport",
+            sfSymbol: "sportscourt")
     }
 }
 
@@ -69,39 +81,5 @@ struct ContentView_Previews: PreviewProvider {
             ContentView()
                 .preferredColorScheme(.dark)
         }
-    }
-}
-
-struct CardView {
-    var content: String
-    @State var isFaceUp: Bool = true
-    
-    let shape = RoundedRectangle(cornerRadius: 20)
-    
-}
-
-extension CardView: View {
-    
-    var body: some View {
-        ZStack {
-            
-            if isFaceUp {
-                shape
-                    .fill()
-                    .foregroundColor(.white)
-                shape
-                    .strokeBorder(lineWidth: 3)
-                Text(content)
-                    .font(.largeTitle)
-            } else {
-                shape
-                    .fill()
-            }
-        }
-        .onTapGesture {
-            isFaceUp.toggle()
-        }
-        .aspectRatio(2/3, contentMode: .fit)
-
     }
 }
